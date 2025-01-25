@@ -195,6 +195,7 @@ cdef class Boltz:
         self.ReducedIonizationErr = 0.0
         self.ReducedAttachmentErr = 0.0
         self.Steady_State_Threshold = 40.0
+        self.Crossed_SST = False
         self.MixObject = Gasmix()
 
     def reset(self):
@@ -377,10 +378,13 @@ cdef class Boltz:
         self.end()
         # Steady state
         if abs(self.ReducedIonization - self.ReducedAttachment) >= self.Steady_State_Threshold:
-            if self.ReducedIonization ==0:
+            if self.ReducedIonization == 0:
                 print("Steady State Threshold has been crossed. Will not run the SST simulation as the ionisation rate is zero.")
                 return
-            if self.Console_Output_Flag: print("\n**Crossed the set Steady state simulation threshold = {}\n".format(self.Steady_State_Threshold))
+            if self.Console_Output_Flag:
+                print("\n**Crossed the set Steady state simulation threshold = {}\n".format(self.Steady_State_Threshold))
+
             TownsendFunc.run(self)
+            self.Crossed_SST = True
 
         return

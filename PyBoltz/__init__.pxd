@@ -1,1 +1,1 @@
-from Boltz cimport Boltz
+from PyBoltz.Boltz cimport Boltz

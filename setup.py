@@ -1,5 +1,7 @@
 from setuptools import setup, Extension
+from setuptools import find_namespace_packages
 from Cython.Distutils import build_ext
+
 import os
 import Cython
 import numpy
@@ -28,8 +30,8 @@ def makeExtensions(path):
             if file.endswith(".pyx"):
                 moduleFiles = [] 
                 moduleFiles.append(root+'/'+file)
-                if root+'/'+(file.split('.')[0]+'.pxd') in glob.glob(root+"/*.pxd"):
-                    moduleFiles.append(root+'/'+(file.split('.')[0]+'.pxd'))
+                #if root+'/'+(file.split('.')[0]+'.pxd') in glob.glob(root+"/*.pxd"):
+                    #moduleFiles.append(root+'/'+(file.split('.')[0]+'.pxd'))
                 pathWithFile = root+'/'+file.split('.')[0]
                 moduleName = pathWithFile.replace('/','.')
                 extensions.append(Extension(moduleName,moduleFiles,
@@ -53,13 +55,14 @@ extensions = makeExtensions('PyBoltz')
 #print(returnPyxFiles("PyBoltz/Townsend/Monte/")+returnPxdFiles("PyBoltz/Townsend/Monte/"))
 setup(
     setup_requires=[
-        'cython>=0.2',
+        'cython>=3.0',
+        'numpy',
     ],
     zip_safe=False,
     name='PyBoltz',  # Required
-    packages=['PyBoltz'],
+    packages=find_namespace_packages(),
 
-    version='1.1.0',  # Required
+    version='1.1.1',  # Required
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4',
     package_dir={'PyBoltz': 'PyBoltz'},
     package_data={  # Optional
@@ -74,7 +77,7 @@ setup(
 
     },
 
-    install_requires=['numpy','cython','PyGasMix @ git+https://github.com/UTA-REST/PyGasMix.git#egg=PyGasMix-1.2.0'],  # Optional
+    install_requires=['numpy','cython','PyGasMix @ git+https://github.com/UTA-REST/PyGasMix.git#egg=PyGasMix-1.2.1'],  # Optional
     include_package_data = True,
     ext_modules = extensions,
     cmdclass={'build_ext': build_ext},

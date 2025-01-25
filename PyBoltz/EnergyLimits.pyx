@@ -1,8 +1,8 @@
 from __future__ import print_function
 
-from Boltz cimport Boltz
+from PyBoltz.Boltz cimport Boltz
 import cython
-from Boltz cimport drand48
+from PyBoltz.Boltz cimport drand48
 from libc.math cimport sin, cos, acos, asin, log, sqrt, pow,log10
 from libc.stdlib cimport malloc, free
 from libc.string cimport memset
@@ -10,7 +10,7 @@ from libc.string cimport memset
 import numpy as np
 cimport numpy as np
 
-from MBSorts cimport MBSort, MBSortT
+from PyBoltz.MBSorts cimport MBSort, MBSortT
 
 # The implementation of the EnergyCuts functions mirrors the MONTEC functions.
 # The later are more extensively commented and we guide developers there for

@@ -2,9 +2,9 @@ import math
 
 from libc.math cimport sin, cos, acos, asin, log, sqrt, pow
 from libc.string cimport memset
-import Setups
-import Mixers
-import EnergyLimits
+from PyBoltz import Setups
+from PyBoltz import Mixers
+from PyBoltz import EnergyLimits
 import PyBoltz.MonteFuncs
 import PyBoltz.Townsend
 cimport PyBoltz.MonteFuncs

@@ -1,0 +1,6 @@
+wheel
+cython
+matplotlib
+numpy
+setuptools
+tables

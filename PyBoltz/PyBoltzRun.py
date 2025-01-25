@@ -128,6 +128,9 @@ class PyBoltzRun:
                        [MBObject.ErrorDiffusionXY, MBObject.ErrorDiffusionY, MBObject.ErrorDiffusionYZ],
                        [MBObject.ErrorDiffusionXZ, MBObject.ErrorDiffusionYZ, MBObject.ErrorDiffusionZ]]
         Outputs['DTensor']       = PBRes(np.array(DTensor), np.array(DTensorErr))
+        Outputs['ReducedIonization'] =  PBRes(MBObject.ReducedIonization, MBObject.ReducedIonizationErr)
+        Outputs['ReducedAttachment'] =  PBRes(MBObject.ReducedAttachment, MBObject.ReducedAttachmentErr)
+        Outputs['AlphaSST']    =  PBRes(MBObject.AlphaSST, MBObject.AlphaSSTErr)
 
         return Outputs
 

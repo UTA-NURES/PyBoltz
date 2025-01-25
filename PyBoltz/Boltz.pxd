@@ -115,8 +115,12 @@ cdef class Boltz:
         '''Absolute tempreture in Kelvin.'''
         double ReducedIonization
         '''Variable used to represent the ionisation rate.'''
+        double ReducedIonizationErr
+        '''Variable used to represent the ionisation rate error.'''
         double ReducedAttachment
         '''Variable used to represent the attachement rate.'''
+        double ReducedAttachmentErr
+        '''Variable used to represent the attachment rate error.'''
         double CONST1
         '''Constant that is equal to (electron mass charge ratio) / 2 * 1e-9.'''
         double CONST2

@@ -1,7 +1,7 @@
-from Boltz cimport Boltz
+from PyBoltz.Boltz cimport Boltz
 from libc.math cimport sin, cos, acos, asin, log, sqrt
 from PyGasMix.Gasmix cimport Gasmix
-from Ang cimport Ang
+from PyBoltz.Ang cimport Ang
 import sys
 import cython
 
@@ -669,7 +669,7 @@ cpdef MixerT(Boltz object):
                                                                             iEnergy] + \
                                                                         object.NullCollisionFreq[GasIndex][iEnergy][IL]
                 if object.NullCollisionFreq[GasIndex][iEnergy][IL] < 0:
-                    print "WARNING NEGATIVE NULL COLLISION FREQUENCY"
+                    print("WARNING NEGATIVE NULL COLLISION FREQUENCY")
             for IL in range(int(object.NumMomCrossSectionPointsNull[GasIndex])):
                 if object.TotalCollisionFrequencyNull[GasIndex][iEnergy] == 0:
                     object.NullCollisionFreq[GasIndex][iEnergy][IL] = 0.0

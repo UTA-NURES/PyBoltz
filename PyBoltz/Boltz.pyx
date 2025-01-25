@@ -2,9 +2,9 @@ import math
 
 from libc.math cimport sin, cos, acos, asin, log, sqrt, pow
 from libc.string cimport memset
-import Setups
-import Mixers
-import EnergyLimits
+from PyBoltz import Setups
+from PyBoltz import Mixers
+from PyBoltz import EnergyLimits
 import PyBoltz.MonteFuncs
 import PyBoltz.Townsend
 cimport PyBoltz.MonteFuncs
@@ -192,6 +192,8 @@ cdef class Boltz:
         self.AttachmentSSTErr = 0.0
         self.ReducedIonization = 0.0
         self.ReducedAttachment = 0.0
+        self.ReducedIonizationErr = 0.0
+        self.ReducedAttachmentErr = 0.0
         self.Steady_State_Threshold = 40.0
         self.Crossed_SST = False
         self.MixObject = Gasmix()
@@ -219,6 +221,9 @@ cdef class Boltz:
 
         for I in range(4000):
             self.CollisionEnergies[I] = 0.0
+        for I in range(299):
+            self.CollisionTimes[I]=0.0
+
 
     def end(self):
         """
@@ -242,8 +247,11 @@ cdef class Boltz:
             self.VelocityY *= 1e-5
             self.VelocityX *= 1e-5
 
-            self.ReducedIonization = self.IonisationRate * 760 * self.TemperatureKelvin / (self.Pressure_Torr * 293.15)
-            self.ReducedAttachment = self.AttachmentRate * 760 * self.TemperatureKelvin / (self.Pressure_Torr * 293.15)
+            self.ReducedIonization = self.IonisationRate /( 760 * self.TemperatureKelvin / (self.Pressure_Torr * 293.15))
+            self.ReducedIonizationErr = self.IonisationRateError /( 760 * self.TemperatureKelvin / (self.Pressure_Torr * 293.15))
+
+            self.ReducedAttachment = self.AttachmentRate /( 760 * self.TemperatureKelvin / (self.Pressure_Torr * 293.15))
+            self.ReducedAttachmentErr = self.AttachmentRateError /( 760 * self.TemperatureKelvin / (self.Pressure_Torr * 293.15))
 
 
         # The different counters for collision types.
@@ -266,8 +274,8 @@ cdef class Boltz:
         """
         This function picks which sim functions to use, depending on applied fields and thermal motion.
         """
-        ELimFunc = EnergyLimits.EnergyLimit
-        MonteCarloFunc = PyBoltz.MonteFuncs.MONTE
+        ELimFunc = EnergyLimits.EnergyLimitT
+        MonteCarloFunc = PyBoltz.MonteFuncs.MONTET
         TownsendFunc = PyBoltz.Townsend.ALPCALCT
         if (self.Enable_Thermal_Motion != 0):
             MixerFunc = Mixers.MixerT
@@ -350,7 +358,22 @@ cdef class Boltz:
         if self.Console_Output_Flag: print("Calculated the final energy = " + str(self.Max_Electron_Energy))
 
         # Run the simulation
-        MonteCarloFunc.run(self)
+
+        ELimNotYetFixed=1
+        while ELimNotYetFixed==1:
+            try:
+                MonteCarloFunc.run(self)
+            except ValueError as err:
+                if "ENERGY INTEGRATION RANGE" in str(err).upper():
+                    print("Electron max energy " + str(round(self.Max_Electron_Energy,2)) +" exceeded, increasing to " + str(round(self.Max_Electron_Energy * math.sqrt(2),2)) +" and trying again")
+                    self.Max_Electron_Energy = self.Max_Electron_Energy * math.sqrt(2)
+                    self.reset()
+                    MixerFunc(self)
+                else:
+                    raise err
+            else:
+                ELimNotYetFixed=0
+
         # Closeout and end
         self.end()
         # Steady state

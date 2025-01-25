@@ -4,7 +4,7 @@ from libc.string cimport memset
 from PyBoltz.Boltz cimport drand48
 from PyBoltz.MBSorts cimport MBSortT
 from libc.stdlib cimport malloc, free
-from MonteVars cimport MonteVars
+from PyBoltz.Townsend.Monte.MonteVars cimport MonteVars
 import cython
 import numpy as np
 cimport numpy as np

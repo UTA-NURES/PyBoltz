@@ -4,6 +4,18 @@ This software package is a translation of the Fortran based Magboltz code (Biagi
 
 ## General information.
 
+### About PyBoltz ###
+
+PyBoltz is an electron swarm Monte Carlo package for calcualting transport parameters of electrons in different gas mixtures that are relevant to particle detectors.
+
+To cite PyBoltz, and for more information:
+
+```
+Electron transport in gaseous detectors with a Python-based Monte Carlo simulation code
+B. Al Atoum et al, Comp Phys Comm 254 (2020) 107357
+https://www.sciencedirect.com/science/article/abs/pii/S0010465520301533
+```
+
 ### About Magboltz.
 The Magboltz program computes drift gas properties by "numerically integrating the Boltzmann transport equation"-- i.e., simulating an electron bouncing around inside a gas. By tracking how far the virtual electron propagates, the program can compute the drift velocity. By including a magnetic field, the program can also calculate the Lorentz angle. [Read more](http://cyclo.mit.edu/drift/www/aboutMagboltz.html).
 

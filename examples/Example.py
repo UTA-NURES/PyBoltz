@@ -27,7 +27,7 @@ MySettings   ={'Gases'                 :['NEON','CO2'],
                'Pressure_Torr'         :7500.062,
                'BField_Tesla'          :0,
                'BField_angle'          :0,
-               'Angular_dist_model'    :1,
+               'Angular_dist_model'    :2,
                'Enable_penning'        :0,
                'Enable_thermal_motion' :1,
                'ConsoleOutputFlag'     :1}
@@ -68,15 +68,15 @@ for E in EFields:
     DLs.append(Output['DL'].val)
     DLs_err.append(Output['DL'].err)
     
-    DT1s.append(Output['DT'].val)
-    DT1s_err.append(Output['DT'].err)
+    DT1s.append(Output['DT1'].val)
+    DT1s_err.append(Output['DT1'].err)
 
-    DL1s.append(Output['DL'].val)
-    DL1s_err.append(Output['DL'].err)
+    DL1s.append(Output['DL1'].val)
+    DL1s_err.append(Output['DL1'].err)
 t2=time.time()
 
 print('time taken' +str(t2-t1))
 
 print('')
 for ei in range(len(EFields)):
-    print("E = " +str(EFields[ei])+", "+ " V = " +str(DriftVels[ei])+ ", DT = " + str(DTs[ei]) + ", DL = " +str(DLs[ei]))
+    print("E = " +str(EFields[ei])+", "+ " V = " +str(DriftVels[ei])+ ", DT = " + str(DTs[ei]) + ", DL = " +str(DLs[ei])+ ", DT* = " + str(DT1s[ei]) + ", DL* = " +str(DL1s[ei]))

@@ -82,5 +82,3 @@ setup(
     ext_modules = extensions,
     cmdclass={'build_ext': build_ext},
 )
-
-B

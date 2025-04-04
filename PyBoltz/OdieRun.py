@@ -4,7 +4,6 @@ import numpy as np
 from PyBoltz.Boltz import Boltz
 from PyBoltz.PyBoltzRun import PBRes
 
-
 class OdieRun:
     '''Class to run PyBoltz and provide output for the Garfield++ package'''
 
@@ -29,9 +28,10 @@ class OdieRun:
     }
 
     Gases = [
-        np.nan, 'CF4', 'ARGON', 'HELIUM4', 'HELIUM3', 'NEON', 'KRYPTON', 'XENON', 'CH4', 'ETHANE',
-        'PROPANE', 'ISOBUTANE', 'CO2', np.nan, 'H2O', 'OXYGEN', 'NITROGEN', np.nan, np.nan, np.nan,
-        np.nan, 'HYDROGEN', 'DEUTERIUM', np.nan, np.nan, 'DME'
+        [], ['CF4'], ['ARGON', 'AR'], ['HELIUM4', 'HE4'], ['HELIUM3', 'HE3'], ['NEON', 'NE'],
+        ['KRYPTON', 'KR'], ['XENON', 'XE'], ['METHANE', 'CH4'], ['ETHANE', 'C2H6'], ['PROPANE', 'C3H8'],
+        ['ISOBUTANE', 'C4H10'], ['CO2'], [], ['WATER', 'H2O'], ['OXYGEN', 'O2'], ['NITROGEN', 'N2'],
+        [], [], [], [], ['HYDROGEN', 'H2'], ['DEUTERIUM', 'D2'], [], [], ['DME']
     ]
 
     GridSettings = {
@@ -51,11 +51,13 @@ class OdieRun:
 
     def ListGases(self):
         for idx, gas in enumerate(self.Gases):
-            if type(gas) is str:
+            if gas:
                 print("{} {}".format(idx, gas))
 
     def GasCode(self, GasName):
-        return self.Gases.index(GasName)
+        for idx, names in enumerate(self.Gases):
+            if GasName.upper() in names:
+                return idx
 
     def GasName(self, Code):
         return Gases[Code]
@@ -109,7 +111,8 @@ class OdieRun:
         MBObject.Num_Samples = Inputs['NumSamples']
 
         if PrintSettings:
-            print(Inputs)
+            print("Simulation settings...")
+            print(json.dumps(Inputs, indent=4))
 
         return True
 
@@ -138,8 +141,12 @@ class OdieRun:
             [MBObject.ErrorDiffusionXZ, MBObject.ErrorDiffusionYZ, MBObject.ErrorDiffusionZ]
         ]
         Outputs['DTensor'] = PBRes(np.array(DTensor), np.array(DTensorErr))
+
         Outputs['AttachmentRate'] = PBRes(MBObject.AttachmentRate, MBObject.AttachmentRateError)
         Outputs['IonisationRate'] = PBRes(MBObject.IonisationRate, MBObject.IonisationRateError)
+        Outputs['AttachmentSST'] = PBRes(MBObject.AttachmentSST, MBObject.AttachmentSSTErr)
+        Outputs['IonisationSST'] = PBRes(MBObject.AlphaSST, MBObject.AlphaSSTErr)
+        Outputs['Crossed_SST'] = MBObject.Crossed_SST
 
         lor_angle, lor_error = self.CalcLorentzAngle(MBObject)
         Outputs['LorentzAngle'] = PBRes(lor_angle, lor_error)
@@ -427,9 +434,16 @@ class OdieRun:
                     dt = Output['DT1'].val * SQRTP * 1E-4
 
                     #Yes, alpha and alpha0 are supposed to be the same value.
-                    alpha = Output['IonisationRate'].val
+                    alpha  = Output['IonisationRate'].val
                     alpha0 = Output['IonisationRate'].val
-                    eta = Output['AttachmentRate'].val
+                    eta    = Output['AttachmentRate'].val
+
+                    #If the steady state threshold was crossed, use the SST calculation of the ionisation
+                    #and attachment coefficients as the default values.
+                    if Output['Crossed_SST'] is True:
+                        alpha  = Output['IonisationSST'].val
+                        alpha0 = Output['IonisationSST'].val
+                        eta    = Output['AttachmentSST'].val
 
                     #If the coefficients are zero, set to -30 as a sufficiently small power; log(-30) is basically zero.
                     #Otherwise store the logarithm of the reduced coefficients.

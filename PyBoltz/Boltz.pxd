@@ -11,6 +11,8 @@ cdef class Boltz:
     cpdef Start(self)
 
     cdef public:
+        bint Crossed_SST
+        '''This is flag to mark if the steady state threshold has been crossed.'''
         double EFieldOverBField
         '''This is a constant that is equal to the electric field / magentic field * 1e-9.'''
         double AngularSpeedOfRotation

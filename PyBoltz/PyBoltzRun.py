@@ -22,7 +22,7 @@ class PyBoltzRun:
     PBSettings   ={'Gases'                 :['NEON','CO2'],
                    'Fractions'             :[90,10],
                    'Max_collisions'        :4e7,
-                   'EField_Vcm'            :100, 
+                   'EField_Vcm'            :100,
                    'Max_electron_energy'   :0,
                    'Temperature_C'         :23,
                    'Pressure_Torr'         :750.062,
@@ -37,29 +37,35 @@ class PyBoltzRun:
                    'Decor_Step'            :0,
                    'NumSamples'            :10}
     '''Dictionary used to store the inputs/settings for the PyBoltz simulation.'''
+
     # Available Gases
-    Gases = [np.nan, 'CF4', 'ARGON', 'HELIUM4', 'HELIUM3', 'NEON', 'KRYPTON', 'XENON', 'CH4', 'ETHANE', 'PROPANE'
-         , 'ISOBUTANE', 'CO2', np.nan, 'H2O', 'OXYGEN', 'NITROGEN', np.nan, np.nan, np.nan, np.nan
-         , 'HYDROGEN', 'DEUTERIUM', np.nan, np.nan, 'DME']
-    '''Array of gases in PyBoltz.'''
+    Gases = [
+        [], ['CF4'], ['ARGON', 'AR'], ['HELIUM4', 'HE4'], ['HELIUM3', 'HE3'], ['NEON', 'NE'],
+        ['KRYPTON', 'KR'], ['XENON', 'XE'], ['METHANE', 'CH4'], ['ETHANE', 'C2H6'], ['PROPANE', 'C3H8'],
+        ['ISOBUTANE', 'C4H10'], ['CO2'], [], ['WATER', 'H2O'], ['OXYGEN', 'O2'], ['NITROGEN', 'N2'],
+        [], [], [], [], ['HYDROGEN', 'H2'], ['DEUTERIUM', 'D2'], [], [], ['DME']
+    ]
+    '''Array of available gases in PyBoltz.'''
 
     # Print list of available gases
     def ListGases(self):
-        '''Function used to print all the gases names in PyBoltz.'''
-        for g in self.Gases:
-            if(type(g)==str):
-                print(g,self.GasCode(g))
+        '''Function used to print all the gas names in PyBoltz.'''
+        for idx, gas in enumerate(self.Gases):
+            if gas:
+                print("{} {}".format(idx, gas))
 
-    # Convert GasName into MagBoltz GasCode            
-    def GasCode(self,GasName):
-        '''Function used to get the ID of the gas. The ID is simply the index of that gas in that array.'''
-        return self.Gases.index(GasName)
+    # Convert GasName into MagBoltz GasCode
+    def GasCode(self, GasName):
+        '''Function used to get the ID of the gas. The ID is simply the index of that gas in the array.'''
+        for idx, names in enumerate(self.Gases):
+            if GasName.upper() in names:
+                return idx
 
     # Convert MagBoltz GasCode in GasName
-    def GasName(self,Code):
-        '''Function used to return the name of the Gas ID given.'''
+    def GasName(self, Code):
+        '''Function used to return the name(s) of the given Gas ID.'''
         return Gases[Code]
-    
+
     # Load Input Dictionary into MagBoltz object
     def ProcessInputs(self,MBObject, Inputs):
         '''Function used to setup the PyBoltz Object with the given inputs in the PBSettings dictionary.'''

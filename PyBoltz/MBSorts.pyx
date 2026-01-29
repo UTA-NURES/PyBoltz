@@ -16,7 +16,7 @@ cdef long long MBSort(int I, double R2, int IE,Boltz Object):
     """
     cdef long long iStep,Increment
     cdef int K
-    iStep = long(Object.ISIZENT)
+    iStep = int(Object.ISIZENT)
     Increment = 0
 
     for K in range(12):
@@ -49,7 +49,7 @@ cdef long long MBSortT(int GasIndex, int I, double R2, int IE,Boltz Object):
 
     cdef long long iStep,Increment
     cdef int K
-    iStep = long(Object.ISIZE[GasIndex])
+    iStep = int(Object.ISIZE[GasIndex])
 
     Increment = 0
     for K in range(12):

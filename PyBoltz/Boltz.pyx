@@ -18,7 +18,7 @@ from PyGasMix.Gasmix cimport Gasmix
 cdef extern from "C/RM48.h":
     double DRAND48(double dummy)
     void RM48(double lenv)
-    void RM48IN(int IJL, int NTOT, intNTOT2)
+    void RM48IN(int IJL, int NTOT, int NTOT2)
 
 
 cdef double drand48(double dummy):
